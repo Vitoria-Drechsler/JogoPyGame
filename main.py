@@ -40,14 +40,13 @@ fonteMenu = pygame.font.SysFont("comicsans",18)
 
 def jogar():
     fundoMov1 = 0
-    fundoMov2 = 1008
+    fundoMov2 = 1070
     posicaoXPersona = 0
-    posicaoYPersona = 100
+    posicaoYPersona = 450
     movimentoXPersona  = 0
-    movimentoYPersona  = 0
     velocidadeMovPersona = 5
-    posicaoXMissel = 800
-    posicaoYMissel = 100
+    posicaoXMissel = random.randint(0,900)
+    posicaoYMissel = -100
     velocidadeMissel = 2
     pontos = 0
     pygame.mixer.Sound.play(missileSound)
@@ -58,14 +57,6 @@ def jogar():
             if evento.type == pygame.QUIT:
                 quit()
                 movimentoXPersona = 0
-            elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_UP:
-                movimentoYPersona = -velocidadeMovPersona
-            elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_DOWN:
-                movimentoYPersona = velocidadeMovPersona
-            elif evento.type == pygame.KEYUP and evento.key == pygame.K_UP:
-                movimentoYPersona = 0
-            elif evento.type == pygame.KEYUP and evento.key == pygame.K_DOWN:
-                movimentoYPersona = 0
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_RIGHT:
                 movimentoXPersona = velocidadeMovPersona
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_LEFT:
@@ -76,25 +67,18 @@ def jogar():
                 movimentoXPersona = 0
                 
         
-        posicaoXPersona = posicaoXPersona + movimentoXPersona          
-        posicaoYPersona = posicaoYPersona + movimentoYPersona            
+        posicaoXPersona = posicaoXPersona + movimentoXPersona
+
+        posicaoYMissel = posicaoYMissel + velocidadeMissel
+
+                   
         if posicaoXPersona < 0 :
             posicaoXPersona = 0
-        elif posicaoXPersona > 685:
-            posicaoXPersona = 685
-        if posicaoYPersona < 0 :
-            posicaoYPersona = 0
-        elif posicaoYPersona > 150:
-            posicaoYPersona = 150
+        elif posicaoXPersona > 858:
+            posicaoXPersona = 858
             
             
-        posicaoXMissel = posicaoXMissel - velocidadeMissel
-        if posicaoXMissel < -125:
-            pygame.mixer.Sound.play(missileSound)
-            posicaoXMissel = 800
-            pontos = pontos + 1
-            velocidadeMissel = velocidadeMissel + 1
-            posicaoYMissel = random.randint(0,200)
+    
                             
         tela.fill(branco)
         tela.blit(fundo, (fundoMov1,0) )
@@ -116,15 +100,22 @@ def jogar():
         pixelsPersonaY = list(range(posicaoYPersona, posicaoYPersona+51))
         pixelsMisselX = list(range(posicaoXMissel, posicaoXMissel + 125))
         pixelsMisselY = list(range(posicaoYMissel, posicaoYMissel + 25))
-        if  len( list( set(pixelsMisselY).intersection(set(pixelsPersonaY))) ) > dificuldade:
-            if len( list( set(pixelsMisselX).intersection(set(pixelsPersonaX))   ) )  > dificuldade:
+        
+        if posicaoYMissel >= 450:
+
+            if len(list(set(pixelsMisselX).intersection(set(pixelsPersonaX)))) > dificuldade:
+
+                pontos = pontos + 1
+
+                posicaoXMissel = random.randint(0,900)
+                posicaoYMissel = -100
+
+                velocidadeMissel = velocidadeMissel + 1
+
+            else:
+
                 escreverDados(nome, pontos)
                 dead()
-                
-            else:
-                print("Ainda Vivo, mas por pouco!")
-        else:
-            print("Ainda Vivo")
         
         
         pygame.display.update()
