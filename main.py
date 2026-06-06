@@ -27,9 +27,8 @@ fundo = pygame.image.load("assets/fundo.jpg")
 fundoStart = pygame.image.load("assets/backgroundStart.jpg")
 fundoDead = pygame.image.load("assets/backgroundDead.jpg")
 
-
 cesta = pygame.image.load("assets/cesta.png")
-cesta = pygame.transform.scale(cesta, (150,135))
+cesta = pygame.transform.scale(cesta, (100,100)) 
 cherry = pygame.image.load("assets/cai.png")
 cherry = pygame.transform.scale(cherry, (100,100))
 
@@ -41,8 +40,8 @@ fonteMenu = pygame.font.SysFont("comicsans",18)
 def jogar():
     fundoMov1 = 0
     fundoMov2 = 1070
-    posicaoXPersona = 0
-    posicaoYPersona = 450
+    posicaoXPersona = 500
+    posicaoYPersona = 500
     movimentoXPersona  = 0
     velocidadeMovPersona = 5
     posicaoXMissel = random.randint(0,900)
@@ -92,14 +91,17 @@ def jogar():
         
         
         tela.blit(cesta, (posicaoXPersona,posicaoYPersona))
-        tela.blit( cherry, (posicaoXMissel, posicaoYMissel) )
+        pygame.draw.rect(
+            tela,
+            (255,0,0),
+            (posicaoXMissel, posicaoYMissel, 50, 50)
+)
         texto = fonteMenu.render("Pontos: "+str(pontos), True, branco)
         tela.blit(texto, (700,15))
             
         pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona+116))
-        pixelsPersonaY = list(range(posicaoYPersona, posicaoYPersona+51))
         pixelsMisselX = list(range(posicaoXMissel, posicaoXMissel + 125))
-        pixelsMisselY = list(range(posicaoYMissel, posicaoYMissel + 25))
+    
         
         if posicaoYMissel >= 450:
 
