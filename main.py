@@ -14,52 +14,65 @@ while True:
     else:
         print("Nome Inválido!")
         
-tamanho = (1008,600)
+tamanho = (1000,700)
 pygame.display.set_caption("Caça Cerejas")
-icone  = pygame.image.load("assets/cereja.png")
+icone  = pygame.image.load("bases/cereja.png")
 pygame.display.set_icon(icone)
 relogio = pygame.time.Clock()
 tela = pygame.display.set_mode( tamanho ) 
 branco = (255, 255, 255)
 preto = (0, 0, 0)
 
-fundo = pygame.image.load("assets/fundo.jpg")
-fundoStart = pygame.image.load("assets/backgroundStart.jpg")
-fundoDead = pygame.image.load("assets/backgroundDead.jpg")
+fundo = pygame.image.load("bases/fundo.jpg")
+fundoStart = pygame.image.load("bases/backgroundStart.jpg")
+fundoDead = pygame.image.load("bases/backgroundDead.jpg")
 
-cesta = pygame.image.load("assets/cesta.png")
-cesta = pygame.transform.scale(cesta, (100,100)) 
-cherry = pygame.image.load("assets/cai.png")
+cesta = pygame.image.load("bases/cesta.png")
+cesta = pygame.transform.scale(cesta, (145,150)) 
+cherry = pygame.image.load("bases/cai.png")
 cherry = pygame.transform.scale(cherry, (100,100))
 
-missileSound = pygame.mixer.Sound("assets/backgroundGame.wav.mp3")
-explosaoSound = pygame.mixer.Sound("assets/gameover.wav.mp3")
-pygame.mixer.music.load("assets/backgroundGame.wav.mp3")
+cherrySound = pygame.mixer.Sound("bases/backgroundGame.wav.mp3")
+explosaoSound = pygame.mixer.Sound("bases/gameover.wav.mp3")
+pygame.mixer.music.load("bases/backgroundGame.wav.mp3")
 fonteMenu = pygame.font.SysFont("comicsans",18)
+
+
 
 def jogar():
     fundoMov1 = 0
     fundoMov2 = 1070
-    posicaoXPersona = 500
-    posicaoYPersona = 500
+    posicaoXPersona = 450
+    posicaoYPersona = 450
     movimentoXPersona  = 0
     velocidadeMovPersona = 5
-    posicaoXMissel = random.randint(0,900)
-    posicaoYMissel = -100
-    velocidadeMissel = 2
+    posicaoXCherry = random.randint(0,900)
+    posicaoYCherry = -100
+    velocidadeCherry = 2
     pontos = 0
-    pygame.mixer.Sound.play(missileSound)
+    pygame.mixer.Sound.play(cherrySound)
     pygame.mixer.music.play(-1)
     dificuldade = 20
+    pause = False
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 quit()
                 movimentoXPersona = 0
+
+            elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_SPACE:
+                pause = not pause
+                print('Pause =' , pause)
+
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_RIGHT:
                 movimentoXPersona = velocidadeMovPersona
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_LEFT:
                 movimentoXPersona = -velocidadeMovPersona
+
+            elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
+                pygame.quit()
+                quit()
+
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_RIGHT:
                 movimentoXPersona = 0
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_LEFT:
@@ -68,14 +81,14 @@ def jogar():
         
         posicaoXPersona = posicaoXPersona + movimentoXPersona
 
-        posicaoYMissel = posicaoYMissel + velocidadeMissel
 
+        if not pause:
+            posicaoYCherry = posicaoYCherry + velocidadeCherry
                    
         if posicaoXPersona < 0 :
             posicaoXPersona = 0
         elif posicaoXPersona > 858:
             posicaoXPersona = 858
-            
             
     
                             
@@ -91,28 +104,42 @@ def jogar():
         
         
         tela.blit(cesta, (posicaoXPersona,posicaoYPersona))
-        pygame.draw.rect(
-            tela,
-            (255,0,0),
-            (posicaoXMissel, posicaoYMissel, 50, 50)
-)
+        tela.blit(cherry, (posicaoXCherry, posicaoYCherry))
+
+        if pause:
+
+            textoPause = fonteMenu.render(
+                'PAUSE',
+                True,
+                (255,255,255)
+            )
+            tela.blit(textoPause,(430,250))
+            
+            textoPauseGame = fonteMenu.render(
+                'Press Space to Pause Game',
+                True,
+                (255,255,255)
+            )
+            tela.blit(textoPauseGame, (20,560))
+
+        
         texto = fonteMenu.render("Pontos: "+str(pontos), True, branco)
         tela.blit(texto, (700,15))
             
         pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona+116))
-        pixelsMisselX = list(range(posicaoXMissel, posicaoXMissel + 125))
+        pixelsCherryX = list(range(posicaoXCherry, posicaoXCherry + 125))
     
         
-        if posicaoYMissel >= 450:
+        if posicaoYCherry >= 450:
 
-            if len(list(set(pixelsMisselX).intersection(set(pixelsPersonaX)))) > dificuldade:
+            if len(list(set(pixelsCherryX).intersection(set(pixelsPersonaX)))) > dificuldade:
 
                 pontos = pontos + 1
 
-                posicaoXMissel = random.randint(0,900)
-                posicaoYMissel = -100
+                posicaoXCherry = random.randint(0,900)
+                posicaoYCherry = -100
 
-                velocidadeMissel = velocidadeMissel + 1
+                velocidadeCherry = velocidadeCherry + 1
 
             else:
 
