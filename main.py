@@ -32,6 +32,9 @@ cesta = pygame.transform.scale(cesta, (145,150))
 cherry = pygame.image.load("bases/cai.png")
 cherry = pygame.transform.scale(cherry, (100,100))
 
+nuvem = pygame.image.load('bases/nuvem.png')
+nuvem = pygame.transform.scale(nuvem, (180,180))
+
 cherrySound = pygame.mixer.Sound("bases/backgroundGame.wav.mp3")
 explosaoSound = pygame.mixer.Sound("bases/gameover.wav.mp3")
 pygame.mixer.music.load("bases/backgroundGame.wav.mp3")
@@ -49,6 +52,7 @@ def jogar():
     posicaoXCherry = random.randint(0,900)
     posicaoYCherry = -100
     velocidadeCherry = 2
+    posicaoXNuvem = 150
     
     pontos = 0
     pygame.mixer.Sound.play(cherrySound)
@@ -79,13 +83,15 @@ def jogar():
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_LEFT:
                 movimentoXPersona = 0
 
+        posicaoXPersona = posicaoXPersona + movimentoXPersona
+
         raioSol += direcaoSol
         if raioSol > 50:
             direcaoSol = -1
         if raioSol < 30:
             direcaoSol = 1  
         
-        posicaoXPersona = posicaoXPersona + movimentoXPersona
+        posicaoXNuvem += random.randint(-1,1)
 
 
         if not pause:
@@ -108,6 +114,8 @@ def jogar():
             (900,80),
             raioSol
         )
+
+        tela.blit(nuvem, (posicaoXNuvem,50))
 
         fundoMov1 -= 1
         fundoMov2 -= 1
