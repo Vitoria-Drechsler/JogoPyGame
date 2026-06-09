@@ -37,18 +37,19 @@ explosaoSound = pygame.mixer.Sound("bases/gameover.wav.mp3")
 pygame.mixer.music.load("bases/backgroundGame.wav.mp3")
 fonteMenu = pygame.font.SysFont("comicsans",18)
 
-
-
 def jogar():
     fundoMov1 = 0
     fundoMov2 = 1070
     posicaoXPersona = 450
     posicaoYPersona = 450
+    raioSol = 30
+    direcaoSol = 1
     movimentoXPersona  = 0
     velocidadeMovPersona = 5
     posicaoXCherry = random.randint(0,900)
     posicaoYCherry = -100
     velocidadeCherry = 2
+    
     pontos = 0
     pygame.mixer.Sound.play(cherrySound)
     pygame.mixer.music.play(-1)
@@ -77,7 +78,12 @@ def jogar():
                 movimentoXPersona = 0
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_LEFT:
                 movimentoXPersona = 0
-                
+
+        raioSol += direcaoSol
+        if raioSol > 50:
+            direcaoSol = -1
+        if raioSol < 30:
+            direcaoSol = 1  
         
         posicaoXPersona = posicaoXPersona + movimentoXPersona
 
@@ -95,6 +101,14 @@ def jogar():
         tela.fill(branco)
         tela.blit(fundo, (fundoMov1,0) )
         tela.blit(fundo, (fundoMov2,0) )
+
+        pygame.draw.circle(
+            tela,
+            (255,255,0),
+            (900,80),
+            raioSol
+        )
+
         fundoMov1 -= 1
         fundoMov2 -= 1
         if fundoMov1 <= -1129:
@@ -113,7 +127,7 @@ def jogar():
                 True,
                 (255,255,255)
             )
-            tela.blit(textoPause,(430,250))
+            tela.blit(textoPause,(500,350))
             
             textoPauseGame = fonteMenu.render(
                 'Press Space to Pause Game',
@@ -124,7 +138,7 @@ def jogar():
 
         
         texto = fonteMenu.render("Pontos: "+str(pontos), True, branco)
-        tela.blit(texto, (700,15))
+        tela.blit(texto, (850,15))
             
         pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona+116))
         pixelsCherryX = list(range(posicaoXCherry, posicaoXCherry + 125))
