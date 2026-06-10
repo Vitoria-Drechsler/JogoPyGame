@@ -1,0 +1,6 @@
+README.md
+setup.py
+Ca_a_Cerejas.egg-info/PKG-INFO
+Ca_a_Cerejas.egg-info/SOURCES.txt
+Ca_a_Cerejas.egg-info/dependency_links.txt
+Ca_a_Cerejas.egg-info/top_level.txt

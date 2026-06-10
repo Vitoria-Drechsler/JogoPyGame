@@ -4,13 +4,13 @@ executaveis = [
                cx_Freeze.Executable(
                    script="main.py", 
                    icon="bases/icone.ico",
-                    target_name="IronManMarcao.exe"
+                    target_name="CacaCerejas.exe"
                    ) ]
 cx_Freeze.setup(
-    name = "Iron Man",
+    name = "CacaCerejas",
     options={
         "build_exe":{
-            "packages":["pygame"],
+            "packages":["pygame", "pyttsx3", "pyttsx3.drivers", "pyttsx3.drivers.sapi5"],
             "include_files":["bases","recursos"]
         }
     }, executables = executaveis
