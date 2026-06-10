@@ -25,7 +25,9 @@ branco = (255, 255, 255)
 preto = (0, 0, 0)
 
 fundo = pygame.image.load("bases/fundo.jpg")
-fundoStart = pygame.image.load("bases/backgroundStart.jpg")
+fundoStart = pygame.image.load("bases/inicio.png")
+fundoBoasvindas = pygame.image.load("bases/boasvindas.png")
+fundoFim = pygame.image.load("bases/fim.png")
 
 cesta = pygame.image.load("bases/cesta.png")
 cesta = pygame.transform.scale(cesta, (145,150)) 
@@ -176,72 +178,95 @@ def jogar():
 def dead():
     pygame.mixer.music.stop()
     pygame.mixer.Sound.play(explosaoSound)
-    larguraButtonStart = 150
-    alturaButtonStart  = 40
-    larguraButtonQuit = 150
-    alturaButtonQuit  = 40
+
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 quit()
-            elif evento.type == pygame.MOUSEBUTTONDOWN:
-                if startButton.collidepoint(evento.pos):
-                    larguraButtonStart = 140
-                    alturaButtonStart  = 35
-                if quitButton.collidepoint(evento.pos):
-                    larguraButtonQuit = 140
-                    alturaButtonQuit  = 35
-
-                
-            elif evento.type == pygame.MOUSEBUTTONUP:
-                # Verifica se o clique foi dentro do retângulo
-                if startButton.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
-                    larguraButtonStart = 150
-                    alturaButtonStart  = 40
-                    jogar()
-                if quitButton.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
-                    larguraButtonQuit = 150
-                    alturaButtonQuit  = 40
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
                     quit()
+
             
-        tela.fill((255,240,245))
-
-        startButton = pygame.draw.rect(tela, branco, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
-        startTexto = fonteMenu.render("Iniciar Game", True, preto)
-        tela.blit(startTexto, (25,12))
-        
-        quitButton = pygame.draw.rect(tela, branco, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
-        quitTexto = fonteMenu.render("Sair do Game", True, preto)
-        tela.blit(quitTexto, (25,62))
-
-        pygame.draw.rect(
-            tela,
-            branco,
-            (200, 280, 600, 70),
-            border_radius = 15
-        )
+        tela.blit(fundoFim, (0,0))
 
         textoRecorde = fonteRecorde.render(
             f"Recorde: {nome_maior} - {maior_pontos} pontos",
             True,
-            (255,0,0)
+            (0,0,0)
         )       
 
-        tela.blit(textoRecorde,(280,300))
+        tela.blit(textoRecorde,(325,320))
 
         
         pygame.display.update()
         relogio.tick(60)
 
+def boasVindas():
+    languraButtonStart = 220
+    alturaButtonStart = 50
+    while True:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                quit()
+            elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
+                pygame.quit()
+                quit()
+            elif evento.type == pygame.MOUSEBUTTONDOWN:
+                if startButton.collidepoint (evento.pos):
+                    larguraButtonStart = 210
+                    alturaButtonStart = 45
+            elif evento.type == pygame.MOUSEBUTTONUP:
+                if startButton.collidepoint(evento.pos):
+                    larguraButtonStart = 220
+                    alturaButtonStart = 50
+                    jogar()
+        tela.fill(branco)
+        tela.blit(fundoBoasvindas,(0,0))
+
+        textoNome = fonteRecorde.render(
+            f" {nome}",
+            True,
+            preto
+        )
+        tela.blit(textoNome, (400,200))
+
+        textoRecorde = fonteMenu.render(
+            f"{nome_maior} - {maior_pontos} pontos",
+            True,
+            preto
+        )
+        tela.blit(textoRecorde, (190, 535))
+
+        textoData = fonteMenu.render(
+            f"{dataJogada}",
+            True,
+            preto
+        )
+        tela.blit(textoData, (470,535))
+        textoHora = fonteMenu.render(
+            f"{horaJogada}",
+            True,
+            preto
+        )
+        tela.blit(textoHora, (700,535))
+
+        startButton = pygame.Rect(
+            390,
+            630,
+            220,
+            50
+        )
+
+
+        pygame.display.update()
+        relogio.tick(60)
 
 
 def start():
     larguraButtonStart = 150
     alturaButtonStart  = 40
-    larguraButtonQuit = 150
-    alturaButtonQuit  = 40
+    
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -250,10 +275,6 @@ def start():
                 if startButton.collidepoint(evento.pos):
                     larguraButtonStart = 140
                     alturaButtonStart  = 35
-                if quitButton.collidepoint(evento.pos):
-                    larguraButtonQuit = 140
-                    alturaButtonQuit  = 35
-
                 
             elif evento.type == pygame.MOUSEBUTTONUP:
                 # Verifica se o clique foi dentro do retângulo
@@ -261,25 +282,16 @@ def start():
                     #pygame.mixer.music.play(-1)
                     larguraButtonStart = 150
                     alturaButtonStart  = 40
-                    jogar()
-                if quitButton.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
-                    larguraButtonQuit = 150
-                    alturaButtonQuit  = 40
-                    quit()
+                    boasVindas()
+                
             
         tela.fill(branco)
         tela.blit(fundoStart, (0,0))
-        startButton = pygame.draw.rect(tela, branco, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
-        startTexto = fonteMenu.render("Iniciar Game", True, preto)
-        tela.blit(startTexto, (25,12))
+        startButton = pygame.Rect(20,35,190,50)
         
-        quitButton = pygame.draw.rect(tela, branco, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
-        quitTexto = fonteMenu.render("Sair do Game", True, preto)
-        tela.blit(quitTexto, (25,62))
+
         texto = fonteMenu.render(f"The Best - {nome_maior} - {maior_pontos} - { dataJogada} ", True, branco)
-        tela.blit(texto, (480,15))
-        
+        tela.blit(texto, (690,15))
 
         pygame.display.update()
         relogio.tick(60)
