@@ -1,10 +1,11 @@
 import pygame
 import random
 from recursos.funcoes import inicializarBancoDeDados, limpar_tela, escreverDados, maior_pontuador
+from recursos.trabalho import moverNuvem
 
 limpar_tela()
 inicializarBancoDeDados()
-nome_maior, maior_pontos, dataJogada = maior_pontuador()
+nome_maior, maior_pontos, dataJogada, horaJogada = maior_pontuador()
 pygame.init()
 
 while True:
@@ -25,7 +26,6 @@ preto = (0, 0, 0)
 
 fundo = pygame.image.load("bases/fundo.jpg")
 fundoStart = pygame.image.load("bases/backgroundStart.jpg")
-fundoDead = pygame.image.load("bases/backgroundDead.jpg")
 
 cesta = pygame.image.load("bases/cesta.png")
 cesta = pygame.transform.scale(cesta, (145,150)) 
@@ -39,6 +39,7 @@ cherrySound = pygame.mixer.Sound("bases/backgroundGame.wav.mp3")
 explosaoSound = pygame.mixer.Sound("bases/gameover.wav.mp3")
 pygame.mixer.music.load("bases/backgroundGame.wav.mp3")
 fonteMenu = pygame.font.SysFont("comicsans",18)
+fonteRecorde = pygame.font.SysFont('cambria',28)
 
 def jogar():
     fundoMov1 = 0
@@ -91,7 +92,7 @@ def jogar():
         if raioSol < 30:
             direcaoSol = 1  
         
-        posicaoXNuvem += random.randint(-1,1)
+        posicaoXNuvem = moverNuvem (posicaoXNuvem)
 
 
         if not pause:
@@ -205,8 +206,8 @@ def dead():
                     alturaButtonQuit  = 40
                     quit()
             
-        tela.fill(branco)
-        tela.blit(fundoDead, (0,0))
+        tela.fill((255,240,245))
+
         startButton = pygame.draw.rect(tela, branco, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
         startTexto = fonteMenu.render("Iniciar Game", True, preto)
         tela.blit(startTexto, (25,12))
@@ -215,7 +216,22 @@ def dead():
         quitTexto = fonteMenu.render("Sair do Game", True, preto)
         tela.blit(quitTexto, (25,62))
 
+        pygame.draw.rect(
+            tela,
+            branco,
+            (200, 280, 600, 70),
+            border_radius = 15
+        )
 
+        textoRecorde = fonteRecorde.render(
+            f"Recorde: {nome_maior} - {maior_pontos} pontos",
+            True,
+            (255,0,0)
+        )       
+
+        tela.blit(textoRecorde,(280,300))
+
+        
         pygame.display.update()
         relogio.tick(60)
 
