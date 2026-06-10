@@ -1,5 +1,6 @@
 import pygame
 import random
+import pyttsx3
 from recursos.funcoes import inicializarBancoDeDados, limpar_tela, escreverDados, maior_pontuador
 from recursos.trabalho import moverNuvem
 
@@ -7,6 +8,7 @@ limpar_tela()
 inicializarBancoDeDados()
 nome_maior, maior_pontos, dataJogada, horaJogada = maior_pontuador()
 pygame.init()
+
 
 while True:
     nome = input("Informe o Nome do Competidor:")
@@ -66,21 +68,15 @@ def jogar():
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 quit()
-                movimentoXPersona = 0
-
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_SPACE:
                 pause = not pause
-                print('Pause =' , pause)
-
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_RIGHT:
                 movimentoXPersona = velocidadeMovPersona
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_LEFT:
                 movimentoXPersona = -velocidadeMovPersona
-
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
                 pygame.quit()
                 quit()
-
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_RIGHT:
                 movimentoXPersona = 0
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_LEFT:
@@ -96,7 +92,6 @@ def jogar():
         
         posicaoXNuvem = moverNuvem (posicaoXNuvem)
 
-
         if not pause:
             posicaoYCherry = posicaoYCherry + velocidadeCherry
                    
@@ -104,9 +99,7 @@ def jogar():
             posicaoXPersona = 0
         elif posicaoXPersona > 858:
             posicaoXPersona = 858
-            
-    
-                            
+                              
         tela.fill(branco)
         tela.blit(fundo, (fundoMov1,0) )
         tela.blit(fundo, (fundoMov2,0) )
@@ -126,8 +119,7 @@ def jogar():
             fundoMov1 = 1129
         elif fundoMov2 <= -1129:
             fundoMov2 = 1129
-        
-        
+          
         tela.blit(cesta, (posicaoXPersona,posicaoYPersona))
         tela.blit(cherry, (posicaoXCherry, posicaoYCherry))
 
@@ -146,31 +138,22 @@ def jogar():
                 (255,255,255)
             )
             tela.blit(textoPauseGame, (20,560))
-
         
         texto = fonteMenu.render("Pontos: "+str(pontos), True, branco)
         tela.blit(texto, (850,15))
             
         pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona+116))
         pixelsCherryX = list(range(posicaoXCherry, posicaoXCherry + 125))
-    
-        
+      
         if posicaoYCherry >= 450:
-
             if len(list(set(pixelsCherryX).intersection(set(pixelsPersonaX)))) > dificuldade:
-
                 pontos = pontos + 1
-
                 posicaoXCherry = random.randint(0,900)
                 posicaoYCherry = -100
-
                 velocidadeCherry = velocidadeCherry + 1
-
             else:
-
                 escreverDados(nome, pontos)
                 dead()
-        
         
         pygame.display.update()
         relogio.tick(60)
@@ -178,7 +161,6 @@ def jogar():
 def dead():
     pygame.mixer.music.stop()
     pygame.mixer.Sound.play(explosaoSound)
-
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -187,7 +169,6 @@ def dead():
                 if evento.key == pygame.K_ESCAPE:
                     quit()
 
-            
         tela.blit(fundoFim, (0,0))
 
         textoRecorde = fonteRecorde.render(
@@ -198,13 +179,10 @@ def dead():
 
         tela.blit(textoRecorde,(325,320))
 
-        
         pygame.display.update()
         relogio.tick(60)
 
 def boasVindas():
-    languraButtonStart = 220
-    alturaButtonStart = 50
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -218,8 +196,6 @@ def boasVindas():
                     alturaButtonStart = 45
             elif evento.type == pygame.MOUSEBUTTONUP:
                 if startButton.collidepoint(evento.pos):
-                    larguraButtonStart = 220
-                    alturaButtonStart = 50
                     jogar()
         tela.fill(branco)
         tela.blit(fundoBoasvindas,(0,0))
@@ -262,11 +238,11 @@ def boasVindas():
         pygame.display.update()
         relogio.tick(60)
 
-
 def start():
+    falou = False
     larguraButtonStart = 150
     alturaButtonStart  = 40
-    
+    startButton = pygame.Rect(20,35,190,50)
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -277,9 +253,7 @@ def start():
                     alturaButtonStart  = 35
                 
             elif evento.type == pygame.MOUSEBUTTONUP:
-                # Verifica se o clique foi dentro do retângulo
                 if startButton.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
                     larguraButtonStart = 150
                     alturaButtonStart  = 40
                     boasVindas()
@@ -287,13 +261,19 @@ def start():
             
         tela.fill(branco)
         tela.blit(fundoStart, (0,0))
-        startButton = pygame.Rect(20,35,190,50)
-        
 
         texto = fonteMenu.render(f"The Best - {nome_maior} - {maior_pontos} - { dataJogada} ", True, branco)
         tela.blit(texto, (690,15))
 
         pygame.display.update()
         relogio.tick(60)
-           
+
+        if not falou:
+            motor = pyttsx3.init()
+            motor.say("Bem vindo ao jogo Caça Cerejas")
+            motor.runAndWait()
+            falou = True
+
+falouInicio = False
+
 start()
