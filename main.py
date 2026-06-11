@@ -277,3 +277,5 @@ def start():
 falouInicio = False
 
 start()
+
+# comentário da Carol Zilio
